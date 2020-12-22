@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Activitat 1</title>
+    </head>
+
+    <body>
+        <script type="text/javascript"">
+            
+            window.onload = function generarPrimitiva() {
+            var contador = 0;
+            const i = 50;
+            const combinacion = new Array(i);
+
+            do {
+                for (var x = 0; x < i; x++) {
+                    combinacion[x] = x + 1;
+                }
+                combinacion.sort(function() {return Math.random() - 0.5});
+                const premio = combinacion.slice(0, 6);
+
+                console.log("Numero " + contador + " : " + premio);
+                contador++;
+            } while (contador != 50);
+        };
+        </script>
+    </body>
+
+</html>

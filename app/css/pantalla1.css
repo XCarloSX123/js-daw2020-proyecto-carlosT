@@ -1,0 +1,7 @@
+body #container{
+    width:80%;
+    text-align: center;
+    margin:0 auto;
+    padding:5% 0;
+    font-size: 20px;
+}

@@ -1,0 +1,32 @@
+body #container{
+    width:80%;
+    margin:20px;
+}
+
+body #container form, body #container div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+body #container form * {
+    margin: 10px 0;
+}
+
+body #container form input[type="number"]{
+    width:225px;
+}
+
+body #container div {
+    margin-left:5%;
+    width:50%;
+
+}
+
+body #container table tr td{
+    width:155px;
+    text-align: center;
+}
+
+body #container table tr:nth-child(1) {
+    font-weight: bold;
+}

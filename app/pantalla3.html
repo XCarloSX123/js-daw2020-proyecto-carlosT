@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projecte Vanilla Pàgina 3</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/pantalla3.css">
+</head>
+<body>
+    
+    <div id="container">
+
+        <form id="formulario" name="formulario" action="" method="get">
+
+            <label for="pregunta">Pregunta:</label><br />
+            <textarea id="pregunta" name="pregunta" cols="40" rows="10" placeholder="Escribe aquí tu pregunta..."></textarea><br />
+
+            <input type="radio" name="respuesta" id="verdadero" value="True">
+            <label for="verdadero">Verdadero</label>
+
+            <input type="radio" name="respuesta" id="falso" value="False">
+            <label for="falso">Falso</label><br />
+
+            <label for="puntuacion">Puntuación</label>
+            <input type="number" min="0" max="9" id="puntuacion" name="puntuacion"><br />
+
+            <button type="button" id="grabar" name="grabar" >Grabar</button>
+            <button type="button" id="atras" name="atras">Atrás</button>
+            
+
+        </form>
+
+        <div id="contenedor">
+
+            
+
+            <table id="tablaRespuestas">
+
+            </table>
+
+        </div>
+
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script type="module" src="scripts/pantalla3.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+* {
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+    color:black;
+}
+
+body {
+    width: 100%;
+}
+
+body div#container {
+    display:table;
+    width:80%;
+}
+
+button {
+    width:100px;
+    padding:4px 0;
+    margin-top:10px;
+}
+
+input[type="submit"]{
+    width:100px;
+    padding:4px 0;
+    margin-top:10px;
+}
