@@ -1,5 +1,5 @@
 let ms = 5000;
-let arraycuestionario = [];
+
 let formulario = document.getElementById('formulario');
 let parrafo_error = document.createElement('p');
 parrafo_error.setAttribute('id', 'parrafo_error');
@@ -19,6 +19,7 @@ function mostrarUsuario() {
   input.removeAttribute('hidden');
 }
 
+//Promesa que ejecuta la funcion mostrarUsuario si todo ha ido bien
 let promesa = new Promise((resolv, reject) => {
   setTimeout(() => {
     resolv();
@@ -43,7 +44,7 @@ let inputEmail = document.getElementById('txtUsuario');
 
 let pError = document.getElementById('parrafo_error');
 
-//Ejecuta la función pasada como parámetro cuando se quité el foco en el elemento
+//Ejecuta la función pasada como parámetro cuando se quite el foco en el elemento
 inputEmail.addEventListener('focusout', comprobarEmail);
 
 /**
@@ -61,6 +62,8 @@ function msgError() {
  */
 function comprobarEmail(event) {
   let txt = event.target.value;
+
+  //En caso que el texto pasado como parámetro no concuerde con el patron mostrará un mensaje de error y volverá a seleccionar el texto
   if (!patron.test(txt)) {
     msgError('parrafo_error');
 
@@ -69,6 +72,8 @@ function comprobarEmail(event) {
     }, 1);
 
     deleteError();
+
+    //Si el texto es correcto almacenará la informacion en una cookie
   } else {
     const today = new Date();
 
@@ -82,7 +87,7 @@ function comprobarEmail(event) {
     let hora_format =
       today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-    //COMENTAR
+    //Si no se encuentra la cookie indicada se crea una nueva
     if (!Cookies.get(inputEmail.value)) {
       let cuestionario = {
         email: inputEmail.value,
@@ -91,17 +96,25 @@ function comprobarEmail(event) {
         pregunta: [],
       };
 
-      arraycuestionario.push(cuestionario);
+      //Convierte a cadena de texto el objeto pasado
       let str = JSON.stringify(cuestionario);
+
+      //Almacena en la cookie el string agregando un tiempo de expiracion de 7 dias
       Cookies.set(inputEmail.value, str, { expires: 7 });
 
+      //Nuevo objeto usuario
       let user = {
         email: inputEmail.value,
       };
 
+      //Convierte el objeto en string
       let strUser = JSON.stringify(user);
 
+      //Crea una nueva cookie y almacena el string, agregando tiempo de expiracion de 1 dia.
+      //Con esta cookie podremos acceder a la cookie que queramos llamar para cargar sus preguntas
       Cookies.set('usuarioActual', strUser, { expires: 1 });
+
+      //En caso contrario solo se crea o se modifica la cookie usuarioActual agregandole el email introducido por el usuario
     } else {
       let user = {
         email: inputEmail.value,

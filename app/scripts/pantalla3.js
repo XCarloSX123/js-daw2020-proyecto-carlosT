@@ -30,6 +30,7 @@ function volveratras() {
  */
 function mostrarTabla(ms) {
   // Promesa para generar la tabla de forma asíncrona
+
   let load = new Promise((resolver, rechazar) => {
     let cargar = document.createElement('p');
 
@@ -38,6 +39,7 @@ function mostrarTabla(ms) {
     contenedor.appendChild(cargar);
 
     //Le pasa a la funcion resolver la cookie en modo string
+
     if (ms >= 5000) {
       setTimeout(() => {
         contenedor.removeChild(cargar);
@@ -56,6 +58,8 @@ function mostrarTabla(ms) {
   });
 
   load.then((infocookie) => {
+    //Se desactiva el boton hasta que cargue la tabla de preguntas
+
     boton.disabled = false;
 
     //Creación de los elementos para la cabecera de la tabla
@@ -65,6 +69,8 @@ function mostrarTabla(ms) {
     let td2 = document.createElement('td');
     let td3 = document.createElement('td');
     let td4 = document.createElement('td');
+
+    //Se agrega texto en los nodos
 
     td1.textContent = 'Título';
     td2.textContent = 'Respuesta';
@@ -124,82 +130,96 @@ function temp() {
 }
 
 /**
- * COMENTAR
+ * Funcion asincrona que agrega a la tabla los datos introducidos en el formulario. Tras pasar 5 segundos agrega dichos datos a la cookie.
+ * En caso de ningun error el estado de la pregunta almacenada es OK. Si hay algun error se plasmará en el estado con Error al Guardar
  */
 async function almacenarDatos() {
-  atras.setAttribute('disabled', 'true');
+  try {
+    //Se obtiene la cookie secundaria para poder obtener el nombre de la cookie que queremos cargar
 
-  //Creación de las celdas para cada fila de preguntas
-  let fila = document.createElement('tr');
-  let coltitulo = document.createElement('td');
-  let colrespuesta = document.createElement('td');
-  let colpuntuacion = document.createElement('td');
-  let colestado = document.createElement('td');
-  colestado.setAttribute('class', 'estadoTD');
+    let infoUsuario = JSON.parse(Cookies.get('usuarioActual'));
 
-  let txtRespuestavalor = document.querySelector(
-    'input[name = "respuesta"]:checked'
-  ).value;
+    atras.disabled = true;
 
-  //Lanzará un error en caso que haya algún campo vacío
-  if (
-    txtPregunta.value === '' ||
-    txtPuntuacion.value === '' ||
-    txtRespuestavalor === ''
-  ) {
-    throw new Error();
-  }
+    //Creación de las celdas para cada fila de preguntas
 
-  coltitulo.textContent = txtPregunta.value;
-  colrespuesta.textContent = txtRespuestavalor;
-  colpuntuacion.textContent = txtPuntuacion.value;
+    let fila = document.createElement('tr');
+    let coltitulo = document.createElement('td');
+    let colrespuesta = document.createElement('td');
+    let colpuntuacion = document.createElement('td');
+    let colestado = document.createElement('td');
+    colestado.setAttribute('class', 'estadoTD');
 
-  fila.appendChild(coltitulo);
-  fila.appendChild(colrespuesta);
-  fila.appendChild(colpuntuacion);
-  colestado.textContent = 'Guardando...';
-  fila.appendChild(colestado);
+    let txtRespuestavalor = document.querySelector(
+      'input[name = "respuesta"]:checked'
+    ).value;
 
-  tabla.appendChild(fila);
+    //Lanzará un error en caso que haya algún campo vacío
 
-  let cookietitulo = txtPregunta.value;
-  let cookierespuesta = txtRespuestavalor;
-  let cookiepuntuacion = txtPuntuacion.value;
+    if (
+      txtPregunta.value === '' ||
+      txtPuntuacion.value === '' ||
+      txtRespuestavalor === ''
+    ) {
+      throw new Error();
+    }
 
-  //Resetea el valor de los campos input
-  document.getElementById('formulario').reset();
+    coltitulo.textContent = txtPregunta.value;
+    colrespuesta.textContent = txtRespuestavalor;
+    colpuntuacion.textContent = txtPuntuacion.value;
 
-  let cuestionario_pregunta = {
-    titulo: cookietitulo,
-    respuesta: cookierespuesta,
-    puntuacion: cookiepuntuacion,
-    estado: 'OK',
-  };
+    //Agregar elementos al fichero HTML
 
-  let promesa = temp(ms);
+    fila.appendChild(coltitulo);
+    fila.appendChild(colrespuesta);
+    fila.appendChild(colpuntuacion);
+    colestado.textContent = 'Guardando...';
+    fila.appendChild(colestado);
 
-  await promesa
-    .then(() => {
-      colestado.textContent = 'OK';
+    tabla.appendChild(fila);
 
-      //Agrega el contenido de la variable en el array pregunta que contiene la cookie
-      infoUsuario[0].pregunta.push(cuestionario_pregunta);
+    let cookietitulo = txtPregunta.value;
+    let cookierespuesta = txtRespuestavalor;
+    let cookiepuntuacion = txtPuntuacion.value;
 
-      let str = JSON.stringify(infoUsuario[0]);
+    //Nuevo objeto con los datos de la cookie a agregar
 
-      Cookies.set(infoUsuario.email, str);
-    })
-    .catch(() => {
-      colestado.textContent = 'Error al guardar';
-      console.log(infoUsuario.pregunta[0]);
-    });
+    let cuestionario_pregunta = {
+      titulo: cookietitulo,
+      respuesta: cookierespuesta,
+      puntuacion: cookiepuntuacion,
+      estado: 'OK',
+    };
 
-  let ultimoTD = document.querySelector('.estadoTD:last-child');
+    //Resetea el valor de los campos input
 
-  if (ultimoTD.textContent === 'OK') atras.disabled = false;
+    document.getElementById('formulario').reset();
 
-  //Devuelve el error generado anteriormente y lo mantiene en pantalla durante 1 segundo
-  /*
+    let promesa = temp(ms);
+
+    //Tras un retraso de 5 segundos agrega los datos a la cookie y el estado de la pregunta se actualiza a OK
+    //Permite crear varias preguntas al mismo tiempo y agregarlas pasados 5 segundos
+    await promesa
+      .then(() => {
+        let infoCookie = JSON.parse(Cookies.get(infoUsuario.email));
+
+        //Agrega el contenido de la variable en el array pregunta que contiene la cookie
+        infoCookie.pregunta.push(cuestionario_pregunta);
+
+        let str = JSON.stringify(infoCookie);
+
+        Cookies.set(infoUsuario.email, str, { expires: 7 });
+
+        colestado.textContent = 'OK';
+      })
+
+      //En caso de error el estado de la pregunta se actualiza
+      .catch(() => {
+        colestado.textContent = 'Error al guardar';
+      });
+
+    //Devuelve el error generado anteriormente y lo mantiene en pantalla durante 1 segundo
+  } catch (Error) {
     let container = document.getElementById('container');
     let error = document.createElement('p');
 
@@ -210,5 +230,12 @@ async function almacenarDatos() {
 
     setTimeout(() => {
       container.removeChild(error);
-    }, 1000);*/
+    }, 1000);
+  }
+
+  //Cuando todas las promesas han finalizado se comprueba si la ultima celda hija contiene el estado OK para volver a habilitar el boton de atras
+
+  let ultimoTD = document.querySelector('tr:last-child .estadoTD:last-child');
+
+  if (ultimoTD.textContent === 'OK') atras.disabled = false;
 }
