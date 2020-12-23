@@ -218,6 +218,12 @@ async function almacenarDatos() {
         colestado.textContent = 'Error al guardar';
       });
 
+    //Cuando todas las promesas han finalizado se comprueba si la ultima celda hija contiene el estado OK para volver a habilitar el boton de atras
+
+    let ultimoTD = document.querySelector('tr:last-child .estadoTD:last-child');
+
+    if (ultimoTD.textContent === 'OK') atras.disabled = false;
+
     //Devuelve el error generado anteriormente y lo mantiene en pantalla durante 1 segundo
   } catch (Error) {
     let container = document.getElementById('container');
@@ -232,10 +238,4 @@ async function almacenarDatos() {
       container.removeChild(error);
     }, 1000);
   }
-
-  //Cuando todas las promesas han finalizado se comprueba si la ultima celda hija contiene el estado OK para volver a habilitar el boton de atras
-
-  let ultimoTD = document.querySelector('tr:last-child .estadoTD:last-child');
-
-  if (ultimoTD.textContent === 'OK') atras.disabled = false;
 }
